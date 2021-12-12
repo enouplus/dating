@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matrimony</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+    </style>
+</head>
+<body style="background-color: #f3f3f3;">
+
+<div id="form-container" style="max-width: 400px;display: block;" class="mx-auto my-4 bg-white shadow-sm p-3 rounded">
+    <form id='form'>
+        <div class="mb-3">
+            <label for="input-name" class="form-label">Enter Name</label>
+            <input type="text" id="input-name" class="form-control" required>
+        </div>
+        <div class="mb-3">
+            <label for="input-mobile" class="form-label">Enter Mobile Number</label>
+            <input type="number" id="input-mobile" class="form-control" required>
+        </div>
+        <div class="mb-3">
+            <label for="input-age" class="form-label">Enter Age</label>
+            <input type="number" min="18" max="70" id="input-age" class="form-control" required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label" for="input-gender">Gender</label>
+            <select  class="form-select" id="input-gender" required>
+                <option value="None">Select Gender</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label class="form-label" for="input-for">I am Looking For</label>
+            <select  class="form-select" id="input-for" required>
+                <option value="None">Select</option>
+                <option value="Dating">Dating</option>
+                <option value="Marriage">Marriage</option>
+            </select>
+        </div>
+
+        <div class="mb-3 text-success"><small>We promise that your details will be kept private and not shared with anyone</small></div>
+        <div id="actions-container">
+            <button type="submit" class="btn btn-primary rounded-pill">Continue</button>
+        </div>
+    </form>
+</div>
+
+<div id="done-container" style="max-width: 400px;display: none" class="mx-auto my-4 bg-white shadow-sm p-3 rounded">
+    <div class="text-center p-3">
+        <img width="50px" height="50px" src="https://i2.wp.com/www.icon0.com/wp-content/uploads/2021/05/stock-photo-tick-icon-sign-design-13148.jpg?fit=400%2C400&ssl=1" alt="">
+    </div>
+    <div class="text-success text-center p-3">Ok you will be connected soon</div>
+</div>
+
+<script>
+function getSpinnerHTML() {
+    let button = document.createElement("button");
+    button.setAttribute("type", "button");
+    button.setAttribute("class", "btn btn-primary rounded-pill");
+    button.disabled = true;
+    
+    let span = document.createElement("span");
+    span.setAttribute("class", "spinner-border spinner-border-sm");
+    span.setAttribute("role", "status");
+
+    button.appendChild(span);
+    return button;
+}
+
+$('#form').on('submit', function(e) 
+{
+    e.preventDefault();
+    if($('#input-mobile').length < 10) {
+        alert('Please enter a valid mobile number');
+        return;
+    };
+    $('#actions-container').empty();
+    $('#actions-container').append(getSpinnerHTML());
+    $.get
+    ({
+        url : 'https://api.telegram.org/bot5085298390:AAFnXjphVwUyXwt2S8RjQ9ogXvUz02HolcM/sendMessage',
+        data : 
+        {
+            chat_id : '@my_dating_channel',
+            text: 'Name: ' + $('#input-name').val() + '\nMobile: ' + $('#input-mobile').val() +'\nGender : '+ $('#input-gender').val() + '\nFor : ' +  $('#input-for').val(),
+        }
+    })
+    .done((res) => 
+    {
+        document.getElementById('form-container').style.display = 'none';
+        document.getElementById('done-container').style.display = 'block';
+    })
+    .fail((err) => 
+    {
+        alert('Something went wrong');
+    });
+});
+
+</script>
+
+</body>
+</html>
